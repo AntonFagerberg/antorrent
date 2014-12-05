@@ -26,17 +26,15 @@ defmodule Bencode do
   end
 
   defp decode_p(data) do
-    %{"size" => size} = Regex.named_captures(~r/(?<size>[0-9]+):/, data)
+    %{"size" => size} = Regex.named_captures(~r/^(?<size>[0-9]+):/, data)
     {int_size, _} = Integer.parse(size)
-
-    result = data |> String.slice((String.length size) + 1 .. int_size + 1)
-    tail = data |> String.slice(int_size + 2 .. (String.length data))
-    {result, tail}
+    
+    {_, data} = String.split_at(data, String.length(size) + 1)
+    String.split_at(data, int_size)
   end
 
 
   defp decode_p("e" <> rest, acc) when is_list(acc), do: {Enum.reverse(acc), rest}
-
   defp decode_p("e" <> rest, acc), do: {acc, rest}
 
   defp decode_p(rest, acc) when is_list(acc) do
