@@ -40,7 +40,7 @@ defmodule BencodeTest do
   end
 
   test "Parse bytes" do
-    assert decode!("3:" <> <<123, 2, 5, 254>>) === <<123, 2, 5>>
+    assert <<123, 2, 5>> == decode!("3:" <> <<123, 2, 5>>)
   end
 
   test "Parse list with strings" do
